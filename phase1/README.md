@@ -5,7 +5,7 @@ University Project - Automated Program Repair using Genetic Algorithms
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 phase1/
@@ -30,7 +30,7 @@ phase1/
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Run on a Single Benchmark
 
@@ -52,7 +52,9 @@ python evolution.py benchmark3 -v
 
 ---
 
-## 🧬 Mutation Operators
+## 🧬 Genetic Operators
+
+### Mutation Operators
 
 | Operator | Description | Example |
 |----------|-------------|---------|
@@ -62,17 +64,36 @@ python evolution.py benchmark3 -v
 | **EXPRESSION** | Mutate comparison operators | `<` → `>`, `<=` → `>=` |
 | **BOOLEAN** | Swap boolean operators | `and` → `or` |
 
+### Crossover Operator
+
+| Operator | Description |
+|----------|-------------|
+| **ONE-POINT CROSSOVER** | Combines two parent programs by picking a pivot point and swapping code sections |
+
+**How Crossover Works:**
+1. Select two parent programs from survivors
+2. Pick a random pivot line index
+3. Create offspring: `parent_a[:pivot] + parent_b[pivot:]`
+4. Validate syntax (crossover can break Python indentation)
+5. With 50% probability, also apply mutation to offspring
+
 **Expression Mutation** is the key innovation beyond standard GenProg. It enables fixing character-level bugs that can't be fixed by line-level operations.
 
 ---
 
-## 📊 Algorithm Overview
+## 📈 Algorithm Overview
+
+Following the GenProg paper (Figure 1), the algorithm consists of:
 
 1. **Fault Localization**: Identify suspicious lines using spectrum-based analysis
 2. **Population Initialization**: Create 40 variants through mutation
 3. **Fitness Evaluation**: Test each variant against positive and negative tests
 4. **Selection**: Keep top 50% based on fitness
-5. **Repopulation**: Mutate survivors to restore population size
+5. **Repopulation** (Crossover + Mutation):
+   - Select two parents from survivors
+   - Apply **crossover** to create offspring
+   - With 50% probability, apply **mutation** to offspring
+   - Add valid offspring to population
 6. **Repeat**: Continue for 50 generations or until perfect repair found
 
 **Fitness Function**: `fitness = (positive_tests_passed × 1.0) + (negative_tests_passed × 10.0)`  
@@ -80,7 +101,7 @@ python evolution.py benchmark3 -v
 
 ---
 
-## 📝 Test Format (tests.json)
+##  Test Format (tests.json)
 
 Each benchmark has a `tests.json` file defining test cases:
 
@@ -105,17 +126,17 @@ Each benchmark has a `tests.json` file defining test cases:
 
 ---
 
-## 📈 Results
+##  Results
 
 All 5 benchmarks successfully repaired:
 
 | Benchmark | Bug Type | Success | Generations |
 |-----------|----------|---------|-------------|
-| benchmark1 | Wrong comparison (`<` vs `>`) | ✅ | 1 |
-| benchmark2 | Wrong comparison condition | ✅ | 1 |
-| benchmark3 | Wrong guard condition | ✅ | 1 |
-| benchmark4 | Boolean logic (`or` vs `and`) | ✅ | 1 |
-| benchmark5 | Wrong comparison (`<` vs `>`) | ✅ | 1 |
+| benchmark1 | Wrong comparison (`<` vs `>`) |  | 1 |
+| benchmark2 | Wrong comparison condition |  | 1 |
+| benchmark3 | Wrong guard condition |  | 1 |
+| benchmark4 | Boolean logic (`or` vs `and`) |  | 1 |
+| benchmark5 | Wrong comparison (`<` vs `>`) |  | 1 |
 
 Each benchmark directory contains:
 - `repaired_solution.py` - The fixed code
@@ -127,7 +148,7 @@ Each benchmark directory contains:
 
 ---
 
-## 🛡️ Timeout Protection
+##  Timeout Protection
 
 The test harness includes timeout protection to prevent infinite loops in buggy variants:
 - Each test has a 2-second timeout
@@ -136,7 +157,7 @@ The test harness includes timeout protection to prevent infinite loops in buggy 
 
 ---
 
-## 💡 Key Design Decisions
+##  Key Design Decisions
 
 1. **Expression Mutation**: Added to handle character-level bugs (comparison operators)
 2. **Boolean Mutation**: Added to handle `and`/`or` logic errors
@@ -146,7 +167,7 @@ The test harness includes timeout protection to prevent infinite loops in buggy 
 
 ---
 
-## 📚 References
+## References
 
 - GenProg: Automated Program Repair via Genetic Programming (Weimer et al., 2009)
 - Spectrum-Based Fault Localization
@@ -154,7 +175,7 @@ The test harness includes timeout protection to prevent infinite loops in buggy 
 
 ---
 
-## 👨‍💻 Usage Examples
+## Usage Examples
 
 ### Example 1: View Help
 ```bash
@@ -173,20 +194,20 @@ python evolution.py benchmark2 --generations 100
 
 ---
 
-## 🎯 Project Requirements (Task03.pdf)
+##  Project Requirements (Task03.pdf)
 
 This implementation fulfills all requirements:
 
-- ✅ **Fault Localization**: `localization.py` implements spectrum-based analysis
-- ✅ **Mutation Operators**: 5 operators including GenProg's 3 + 2 custom
-- ✅ **Fitness Function**: Weighted test-based evaluation
-- ✅ **Genetic Loop**: Population management, selection, repopulation
-- ✅ **5 Benchmarks**: Diverse bug types with automated test suites
-- ✅ **Reports**: Detailed summaries for each repair attempt
+- **Fault Localization**: `localization.py` implements spectrum-based analysis
+- **Mutation Operators**: 5 operators including GenProg's 3 + 2 custom
+- **Fitness Function**: Weighted test-based evaluation
+- **Genetic Loop**: Population management, selection, repopulation
+- **5 Benchmarks**: Diverse bug types with automated test suites
+- **Reports**: Detailed summaries for each repair attempt
 
 ---
 
-## 📄 Output Files
+## Output Files
 
 After running evolution, each benchmark will contain:
 
@@ -200,7 +221,7 @@ After running evolution, each benchmark will contain:
 
 ---
 
-## ⚙️ System Requirements
+## System Requirements
 
 - Python 3.8+
 - Standard library only (no external dependencies)
@@ -208,7 +229,7 @@ After running evolution, each benchmark will contain:
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 **Issue**: "Benchmark not found"  
 **Solution**: Ensure you're in the `phase1` directory when running

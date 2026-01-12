@@ -207,6 +207,91 @@ def mutate_boolean(lines, target_idx):
     return new_lines
 
 
+# === CROSSOVER OPERATOR ===
+
+def crossover(parent_a, parent_b):
+    """
+    Operator: ONE-POINT CROSSOVER
+    
+    Combines genetic material from two parent programs to create two offspring.
+    This fulfills Line 10 of Figure 1 in the GenProg paper.
+    
+    Algorithm:
+    1. Pick a random pivot point (line index)
+    2. Create offspring_1: parent_a[:pivot] + parent_b[pivot:]
+    3. Create offspring_2: parent_b[:pivot] + parent_a[pivot:]
+    
+    Args:
+        parent_a: First parent (list of lines)
+        parent_b: Second parent (list of lines)
+        
+    Returns:
+        tuple: (offspring_1, offspring_2) - both as list of lines
+               Returns (None, None) if crossover produces invalid syntax
+    
+    Note: Crossover can easily break Python's indentation structure,
+    so we validate syntax and return None for invalid offspring.
+    """
+    # Ensure we have valid parents
+    if not parent_a or not parent_b:
+        return None, None
+    
+    # Find the shorter parent length to avoid index errors
+    min_len = min(len(parent_a), len(parent_b))
+    
+    if min_len <= 1:
+        # Too short for meaningful crossover
+        return None, None
+    
+    # Try multiple pivot points to find valid offspring
+    max_attempts = 5
+    
+    for attempt in range(max_attempts):
+        # Pick random pivot point (excluding first and last lines)
+        # This gives us meaningful genetic exchange
+        pivot = random.randint(1, min_len - 1)
+        
+        # Create two offspring using one-point crossover
+        offspring_1 = parent_a[:pivot] + parent_b[pivot:]
+        offspring_2 = parent_b[:pivot] + parent_a[pivot:]
+        
+        # Validate both offspring have valid Python syntax
+        valid_1 = is_valid_syntax(offspring_1)
+        valid_2 = is_valid_syntax(offspring_2)
+        
+        if valid_1 and valid_2:
+            # Both offspring are valid
+            return offspring_1, offspring_2
+        elif valid_1:
+            # Only first is valid, return it with a copy
+            return offspring_1, offspring_1[:]
+        elif valid_2:
+            # Only second is valid, return it with a copy
+            return offspring_2, offspring_2[:]
+        # else: try another pivot point
+    
+    # All attempts failed - return None
+    return None, None
+
+
+def crossover_single(parent_a, parent_b):
+    """
+    Simplified crossover that returns a single valid offspring.
+    
+    This is easier to use in the repopulation loop.
+    
+    Returns:
+        list: A single offspring, or None if crossover fails
+    """
+    offspring_1, offspring_2 = crossover(parent_a, parent_b)
+    
+    if offspring_1 is not None:
+        # Randomly return one of the two offspring
+        return random.choice([offspring_1, offspring_2])
+    
+    return None
+
+
 # === SELECTION LOGIC ===
 
 def select_line_by_weight(weighted_lines):

@@ -25,7 +25,7 @@ import shutil
 from datetime import datetime
 
 # Import our modules
-from mutation import load_program, save_program_to_string, apply_random_mutation
+from mutation import load_program, save_program_to_string, apply_random_mutation, crossover_single
 from test_harness import TestHarness
 
 
@@ -337,25 +337,76 @@ def select_survivors(scored_population):
     return survivors, sorted_pop[0][1]
 
 
+# Probability of applying mutation after crossover
+MUTATION_PROBABILITY = 0.5
+
+
 def repopulate(survivors, weighted_lines, population_size):
     """
-    Fills the population back to population_size by mutating survivors.
+    Fills the population back to population_size using crossover and mutation.
+    
+    This implements the genetic algorithm as described in the GenProg paper:
+    1. Select two parents from survivors
+    2. Apply crossover to create offspring
+    3. With MUTATION_PROBABILITY, also apply mutation to offspring
+    4. Add valid offspring to population
+    
+    Crossover combines genetic material from two parents, which can:
+    - Combine beneficial mutations from different variants
+    - Explore larger regions of the search space
+    - Preserve good partial solutions
     """
     new_population = survivors[:]
     
+    crossover_attempts = 0
+    crossover_successes = 0
+    mutation_only_count = 0
+    
     while len(new_population) < population_size:
-        parent = random.choice(survivors)[:]
+        # Select two different parents
+        if len(survivors) >= 2:
+            parent_a, parent_b = random.sample(survivors, 2)
+        else:
+            # Not enough survivors for crossover, use single parent
+            parent_a = parent_b = random.choice(survivors)
         
         child = None
-        attempts = 0
-        while child is None and attempts < 10:
-            child = apply_random_mutation(parent, weighted_lines)
-            attempts += 1
         
-        if child is None:
-            child = parent[:]
+        # Try crossover first
+        crossover_attempts += 1
+        child = crossover_single(parent_a[:], parent_b[:])
+        
+        if child is not None:
+            crossover_successes += 1
+            # With probability, also apply mutation to the crossed-over child
+            if random.random() < MUTATION_PROBABILITY:
+                mutated_child = None
+                attempts = 0
+                while mutated_child is None and attempts < 5:
+                    mutated_child = apply_random_mutation(child[:], weighted_lines)
+                    attempts += 1
+                if mutated_child is not None:
+                    child = mutated_child
+        else:
+            # Crossover failed (syntax error), fall back to mutation only
+            mutation_only_count += 1
+            parent = random.choice(survivors)[:]
+            attempts = 0
+            while child is None and attempts < 10:
+                child = apply_random_mutation(parent, weighted_lines)
+                attempts += 1
+            
+            if child is None:
+                # All attempts failed, use parent copy
+                child = parent[:]
         
         new_population.append(child)
+    
+    # Report crossover statistics (optional, can be removed for cleaner output)
+    if crossover_attempts > 0:
+        success_rate = (crossover_successes / crossover_attempts) * 100
+        print(f"  Crossover: {crossover_successes}/{crossover_attempts} successful ({success_rate:.0f}%), "
+              f"mutation-only fallback: {mutation_only_count}")
     
     return new_population
 

@@ -4,7 +4,7 @@ def calculate_average(numbers):
     BUG: Uses < instead of == when checking for empty list.
     This causes non-empty lists to incorrectly return 0.
     """
-    if len(numbers) <= 0:  # BUG: should be == 0 or use 'not numbers'
+    if len(numbers) <= 0:  # BUG: should be == 0 and use 'not numbers'
         return 0.0
     
     total = 0
