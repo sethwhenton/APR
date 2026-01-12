@@ -52,7 +52,7 @@ python evolution.py benchmark3 -v
 
 ---
 
-## 🧬 Genetic Operators
+##  Genetic Operators
 
 ### Mutation Operators
 
@@ -81,7 +81,7 @@ python evolution.py benchmark3 -v
 
 ---
 
-## 📈 Algorithm Overview
+##  Algorithm Overview
 
 Following the GenProg paper (Figure 1), the algorithm consists of:
 
