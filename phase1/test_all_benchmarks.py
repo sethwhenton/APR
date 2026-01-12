@@ -12,7 +12,7 @@ import subprocess
 import sys
 import os
 
-BENCHMARKS = ['benchmark1', 'benchmark2', 'benchmark3', 'benchmark4', 'benchmark5']
+BENCHMARKS = ['benchmark1', 'benchmark2', 'benchmark3', 'benchmark4', 'benchmark5', 'benchmark6']
 GENERATIONS = 15  # Quick test with fewer generations
 
 def test_benchmark(benchmark_name):

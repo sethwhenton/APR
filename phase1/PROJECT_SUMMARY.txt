@@ -15,6 +15,8 @@ CORE FILES (7 files)
 5. README.md                 - Complete documentation
 6. QUICK_REFERENCE.txt       - Quick usage guide
 7. test_all_benchmarks.py    - Verification script
+8. create_new_benchmark.py   - Wizard for adding new test cases
+9. INSTRUCTIONS_FOR_LECTURER.txt - Guide for external evaluation
 
 
 BENCHMARKS (5 directories, 20 files)
@@ -120,14 +122,14 @@ All tests passing after repair: 30/30
 
 FILE COUNT
 ================================================================================
-Python implementation files: 4
-Documentation files: 3
-Benchmark programs: 5
-Test definition files: 5
-Generated solutions: 5
-Generated reports: 5
+Python implementation files: 5 (including wizard)
+Documentation files: 4
+Benchmark programs: 6
+Test definition files: 6
+Generated solutions: 6
+Generated reports: 6
 ─────────────────────────
-Total files: 27
+Total files: 33
 
 
 NOTES FOR GRADING

@@ -1,0 +1,77 @@
+================================================================================
+           INSTRUCTIONS FOR EVALUATING WITH NEW TEST CASES
+================================================================================
+
+This Automated Program Repair (APR) tool is generic. You can test it with ANY 
+Python function containing a bug, provided you also supply test cases.
+
+--------------------------------------------------------------------------------
+OPTION 1: THE EASY WAY (Using the Setup Wizard)
+--------------------------------------------------------------------------------
+1. Run the helper script:
+   python create_new_benchmark.py
+
+2. Follow the prompts:
+   - Enter a name (e.g., 'mystery_bug')
+   - Enter the functions name (e.g., 'calculate_tax')
+
+3. The script will create a new folder: benchmarks/mystery_bug/
+
+4. Paste your buggy code into:
+   benchmarks/mystery_bug/patient.py
+
+5. defining your test cases in:
+   benchmarks/mystery_bug/tests.json
+
+6. Run the repair:
+   python evolution.py mystery_bug
+
+
+--------------------------------------------------------------------------------
+OPTION 2: THE MANUAL WAY
+--------------------------------------------------------------------------------
+If you prefer to set it up manually, follow this structure:
+
+1. Create a directory inside 'benchmarks/' (e.g., 'benchmarks/exam_q1')
+
+2. Create 'patient.py' inside that directory:
+   def my_function(x):
+       # buggy code here
+       return x 
+
+3. Create 'tests.json' inside that directory:
+   {
+       "function_name": "my_function",
+       "max_fitness": 33.0,
+       "positive_tests": {
+           "weight": 1.0, 
+           "cases": [
+               {"input": [10], "expected": 20}
+           ]
+       },
+       "negative_tests": {
+           "weight": 10.0,
+           "cases": [
+               {"input": [0], "expected": 0}   <-- This input currently fails
+           ]
+       }
+   }
+
+4. Run the tool:
+   python evolution.py exam_q1
+
+
+--------------------------------------------------------------------------------
+IMPORTANT NOTES FOR TESTING
+--------------------------------------------------------------------------------
+* INPUT FORMAT: Inputs in tests.json must be a LIST of arguments.
+  Correct: "input": [1, 2]      (for function foo(a, b))
+  Wrong:   "input": 1, 2
+
+* DETERMINISM: The buggy function should be deterministic. Random behavior 
+  inside the patient program makes fitness evaluation unreliable.
+
+* TIMEOUTS: If your code causes an infinite loop, the tool handles it safely.
+
+* OUTPUT: The fixed code will be saved as 'repaired_solution.py' in the 
+  benchmark folder.

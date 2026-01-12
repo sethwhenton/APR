@@ -2,7 +2,7 @@
          AUTOMATED PROGRAM REPAIR - SUMMARY REPORT
 ======================================================================
 
-Timestamp: 2026-01-12 23:37:19
+Timestamp: 2026-01-13 00:28:54
 Benchmark: benchmark2
 Function Tested: calculate_average()
 
@@ -11,8 +11,8 @@ RESULT
 ----------------------------------------------------------------------
 Status: SUCCESS - Perfect repair found!
 Final Fitness: 33.0/33.0
-Generations Run: 5
-Solution Found At: Generation 3
+Generations Run: 30
+Solution Found At: Generation 1
 
 ----------------------------------------------------------------------
 FAULT LOCALIZATION
@@ -31,7 +31,7 @@ Total lines changed: 1
 
 Line 7:
   BEFORE: if len(numbers) < 0:  # BUG: should be == 0 or use 'not numbers'
-  AFTER:  if len(numbers) <= 0:  # BUG: should be == 0 and use 'not numbers'
+  AFTER:  if len(numbers) <= 0:  # BUG: should be == 0 or use 'not numbers'
 
 ----------------------------------------------------------------------
 ORIGINAL CODE (patient.py)
@@ -60,7 +60,7 @@ REPAIRED CODE (repaired_solution.py)
   4:     BUG: Uses < instead of == when checking for empty list.
   5:     This causes non-empty lists to incorrectly return 0.
   6:     """
-  7:     if len(numbers) <= 0:  # BUG: should be == 0 and use 'not numbers'
+  7:     if len(numbers) <= 0:  # BUG: should be == 0 or use 'not numbers'
   8:         return 0.0
   9: 
  10:     total = 0

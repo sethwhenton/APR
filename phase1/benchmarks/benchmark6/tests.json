@@ -1,0 +1,56 @@
+{
+    "function_name": "check_access",
+    "max_fitness": 33.0,
+    "positive_tests": {
+        "weight": 1.0,
+        "cases": [
+            {
+                "input": [
+                    15,
+                    true
+                ],
+                "expected": false
+            },
+            {
+                "input": [
+                    15,
+                    false
+                ],
+                "expected": false
+            },
+            {
+                "input": [
+                    20,
+                    false
+                ],
+                "expected": false
+            }
+        ]
+    },
+    "negative_tests": {
+        "weight": 10.0,
+        "cases": [
+            {
+                "input": [
+                    20,
+                    true
+                ],
+                "expected": true
+            },
+            {
+                "input": [
+                    25,
+                    true
+                ],
+                "expected": true
+            },
+            {
+                "input": [
+                    99,
+                    true
+                ],
+                "expected": true
+            }
+        ]
+    }
+}
