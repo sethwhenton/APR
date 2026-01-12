@@ -1,0 +1,56 @@
+{
+    "function_name": "sum_range",
+    "max_fitness": 33.0,
+    "positive_tests": {
+        "weight": 1.0,
+        "cases": [
+            {
+                "input": [
+                    5,
+                    3
+                ],
+                "expected": 0
+            },
+            {
+                "input": [
+                    10,
+                    5
+                ],
+                "expected": 0
+            },
+            {
+                "input": [
+                    7,
+                    2
+                ],
+                "expected": 0
+            }
+        ]
+    },
+    "negative_tests": {
+        "weight": 10.0,
+        "cases": [
+            {
+                "input": [
+                    1,
+                    5
+                ],
+                "expected": 15
+            },
+            {
+                "input": [
+                    0,
+                    3
+                ],
+                "expected": 6
+            },
+            {
+                "input": [
+                    2,
+                    4
+                ],
+                "expected": 9
+            }
+        ]
+    }
+}

@@ -1,0 +1,70 @@
+{
+    "function_name": "count_positives",
+    "max_fitness": 33.0,
+    "positive_tests": {
+        "weight": 1.0,
+        "cases": [
+            {
+                "input": [
+                    []
+                ],
+                "expected": 0
+            },
+            {
+                "input": [
+                    [
+                        0,
+                        0,
+                        0
+                    ]
+                ],
+                "expected": 0
+            },
+            {
+                "input": [
+                    [
+                        -1,
+                        -2,
+                        -3
+                    ]
+                ],
+                "expected": 0
+            }
+        ]
+    },
+    "negative_tests": {
+        "weight": 10.0,
+        "cases": [
+            {
+                "input": [
+                    [
+                        1,
+                        2,
+                        3
+                    ]
+                ],
+                "expected": 3
+            },
+            {
+                "input": [
+                    [
+                        -1,
+                        0,
+                        1,
+                        2
+                    ]
+                ],
+                "expected": 2
+            },
+            {
+                "input": [
+                    [
+                        5,
+                        -5
+                    ]
+                ],
+                "expected": 1
+            }
+        ]
+    }
+}

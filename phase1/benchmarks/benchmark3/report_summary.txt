@@ -1,0 +1,82 @@
+======================================================================
+         AUTOMATED PROGRAM REPAIR - SUMMARY REPORT
+======================================================================
+
+Timestamp: 2026-01-12 23:12:12
+Benchmark: benchmark3
+Function Tested: sum_range()
+
+----------------------------------------------------------------------
+RESULT
+----------------------------------------------------------------------
+Status: SUCCESS - Perfect repair found!
+Final Fitness: 33.0/33.0
+Generations Run: 10
+Solution Found At: Generation 1
+
+----------------------------------------------------------------------
+FAULT LOCALIZATION
+----------------------------------------------------------------------
+Suspicious lines identified (higher weight = more suspicious):
+  Line 9: weight = 0.1
+  Line 11: weight = 0.1
+  Line 13: weight = 1.0
+
+----------------------------------------------------------------------
+CODE CHANGES
+----------------------------------------------------------------------
+Total lines changed: 1
+
+Line 13:
+  BEFORE: return 0
+  AFTER:  pass
+
+----------------------------------------------------------------------
+ORIGINAL CODE (patient.py)
+----------------------------------------------------------------------
+  1: def sum_range(start, end):
+  2:     """
+  3:     Sums all integers from start to end (inclusive).
+  4:     Example: sum_range(1, 5) should return 1+2+3+4+5 = 15
+  5: 
+  6:     BUG: Computes sum from end to start instead of start to end.
+  7:     Uses '<' instead of '>' in the range check.
+  8:     """
+  9:     total = 0
+ 10: 
+ 11:     if start < end:  # BUG: should be > (for descending check)
+ 12:         # This wrongly returns 0 for valid ascending ranges
+ 13:         return 0
+ 14: 
+ 15:     # This sum is never computed for normal ascending inputs
+ 16:     for i in range(start, end + 1):
+ 17:         total += i
+ 18: 
+ 19:     return total
+
+----------------------------------------------------------------------
+REPAIRED CODE (repaired_solution.py)
+----------------------------------------------------------------------
+  1: def sum_range(start, end):
+  2:     """
+  3:     Sums all integers from start to end (inclusive).
+  4:     Example: sum_range(1, 5) should return 1+2+3+4+5 = 15
+  5: 
+  6:     BUG: Computes sum from end to start instead of start to end.
+  7:     Uses '<' instead of '>' in the range check.
+  8:     """
+  9:     total = 0
+ 10: 
+ 11:     if start < end:  # BUG: should be > (for descending check)
+ 12:         # This wrongly returns 0 for valid ascending ranges
+ 13:         pass
+ 14: 
+ 15:     # This sum is never computed for normal ascending inputs
+ 16:     for i in range(start, end + 1):
+ 17:         total += i
+ 18: 
+ 19:     return total
+
+======================================================================
+END OF REPORT
+======================================================================

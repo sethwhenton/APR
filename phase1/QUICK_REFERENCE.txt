@@ -1,0 +1,145 @@
+"""
+QUICK REFERENCE GUIDE - Automated Program Repair
+================================================
+
+RUNNING THE TOOL
+----------------
+Basic usage:
+    python evolution.py benchmark1
+
+With options:
+    python evolution.py benchmark2 --generations 50 --population 60 -v
+
+Available benchmarks:
+    benchmark1 - Wrong comparison operator (< vs >)
+    benchmark2 - Wrong comparison in condition  
+    benchmark3 - Wrong guard condition
+    benchmark4 - Boolean logic error (or vs and)
+    benchmark5 - Wrong comparison operator
+
+
+OUTPUT FILES
+------------
+After running, check the benchmark directory for:
+
+1. repaired_solution.py
+   - The fixed code that passes all tests
+
+2. report_summary.txt
+   - Detailed report including:
+     * Success/failure status
+     * Exact lines changed
+     * Original vs repaired code
+     * Fault localization results
+
+
+MUTATION OPERATORS
+------------------
+DELETE     - Replaces line with 'pass'
+INSERT     - Copies line from elsewhere in code
+SWAP       - Exchanges two lines
+EXPRESSION - Mutates comparison operators (<, >, <=, >=, ==, !=)
+BOOLEAN    - Swaps boolean operators (and ↔ or)
+
+
+ALGORITHM PARAMETERS
+--------------------
+Default values:
+    Population size: 40
+    Generations: 50
+    Survivor ratio: 50%
+    Max fitness: 33.0 (3 positive + 3 negative tests)
+
+Customize with flags:
+    --population 100
+    --generations 150
+    --verbose
+
+
+TROUBLESHOOTING
+---------------
+Q: "Benchmark not found"
+A: Make sure you're in the phase1 directory
+
+Q: Many timeout messages
+A: Normal - buggy variants with infinite loops are skipped
+
+Q: Low fitness scores
+A: Try more generations: --generations 100
+
+
+PROJECT STRUCTURE
+-----------------
+phase1/
+├── evolution.py       - Main algorithm
+├── mutation.py        - Mutation operators
+├── localization.py    - Fault localization
+├── test_harness.py    - Test framework
+├── README.md          - Full documentation
+└── benchmarks/        - 5 test programs
+
+
+CREATING NEW BENCHMARKS
+------------------------
+1. Create directory: benchmarks/benchmark6/
+2. Add patient.py with buggy code
+3. Create tests.json following this format:
+
+{
+    "function_name": "my_function",
+    "max_fitness": 33.0,
+    "positive_tests": {
+        "weight": 1.0,
+        "cases": [
+            {"input": [[arg1, arg2]], "expected": result}
+        ]
+    },
+    "negative_tests": {
+        "weight": 10.0,
+        "cases": [
+            {"input": [[arg1, arg2]], "expected": result}
+        ]
+    }
+}
+
+4. Run: python evolution.py benchmark6
+
+
+UNDERSTANDING RESULTS
+---------------------
+Fitness score breakdown:
+    - Each passing positive test: +1.0
+    - Each passing negative test: +10.0
+    - Perfect score: 33.0 (3×1.0 + 3×10.0)
+
+Generation count:
+    - Lower is better (faster repair)
+    - Most benchmarks solved in 1-5 generations
+
+Code changes:
+    - Check report_summary.txt for line-by-line comparison
+    - BEFORE/AFTER shows exact modifications
+
+
+KEY FEATURES
+------------
+✓ Expression-level mutation (not just line-level)
+✓ Timeout protection against infinite loops
+✓ Detailed reporting for each repair
+✓ Generic framework - works with any Python function
+✓ Fault localization to guide mutations
+✓ No external dependencies
+
+
+SUBMISSION CHECKLIST
+--------------------
+For Task03 submission, ensure you have:
+□ All 5 benchmarks with repaired_solution.py
+□ All 5 report_summary.txt files
+□ Clean code structure (no debug files)
+□ README.md documentation
+□ Working evolution.py that accepts any benchmark
+
+
+For questions or issues, refer to README.md
+"""

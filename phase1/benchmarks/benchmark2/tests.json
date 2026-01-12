@@ -1,0 +1,65 @@
+{
+    "function_name": "calculate_average",
+    "max_fitness": 33.0,
+    "positive_tests": {
+        "weight": 1.0,
+        "cases": [
+            {
+                "input": [
+                    [
+                        0
+                    ]
+                ],
+                "expected": 0.0
+            },
+            {
+                "input": [
+                    [
+                        5,
+                        5
+                    ]
+                ],
+                "expected": 5.0
+            },
+            {
+                "input": [
+                    [
+                        0,
+                        0,
+                        0
+                    ]
+                ],
+                "expected": 0.0
+            }
+        ]
+    },
+    "negative_tests": {
+        "weight": 10.0,
+        "cases": [
+            {
+                "input": [
+                    []
+                ],
+                "expected": 0.0
+            },
+            {
+                "input": [
+                    [
+                        10
+                    ]
+                ],
+                "expected": 10.0
+            },
+            {
+                "input": [
+                    [
+                        2,
+                        4,
+                        6
+                    ]
+                ],
+                "expected": 4.0
+            }
+        ]
+    }
+}

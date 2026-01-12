@@ -1,5 +1,6 @@
 import random
 import ast
+import re
 
 def load_program(filepath):
     """Loads the program as a list of lines."""
@@ -87,6 +88,125 @@ def mutate_swap(lines, idx_a, idx_b):
     
     return new_lines
 
+
+# === EXPRESSION MUTATION (The Bug Fixer!) ===
+
+# All possible comparison operator mutations
+# Each operator can mutate to multiple alternatives
+COMPARISON_MUTATIONS = {
+    '<': ['>', '<=', '!='],      # < can become >, <=, or !=
+    '>': ['<', '>=', '!='],      # > can become <, >=, or !=
+    '<=': ['>=', '<', '=='],     # <= can become >=, <, or ==
+    '>=': ['<=', '>', '=='],     # >= can become <=, >, or ==
+    '==': ['!=', '<=', '>='],    # == can become !=, <=, or >=
+    '!=': ['==', '<', '>'],      # != can become ==, <, or >
+}
+
+# Regex pattern to find comparison operators
+# Order matters: check longer operators first (<=, >=) before shorter ones (<, >)
+COMPARISON_PATTERN = re.compile(r'(<=|>=|==|!=|<|>)')
+
+
+def mutate_expression(lines, target_idx):
+    """
+    Operator: EXPRESSION MUTATION
+    
+    Finds comparison operators in the target line and swaps them with opposites.
+    
+    This is fundamentally different from GenProg's standard operators:
+    - DELETE, INSERT, SWAP work at the LINE level (copy/move entire statements)
+    - EXPRESSION works at the TOKEN level (modify individual operators)
+    
+    Why is this powerful?
+    - Many bugs are "off-by-one" logic errors: < instead of >, == instead of !=
+    - These can't be fixed by moving lines around
+    - We need to surgically change the operator itself
+    
+    Example:
+        Input:  "if n < current:"
+        Output: "if n > current:"
+    """
+    new_lines = lines[:]
+    target_line = new_lines[target_idx]
+    
+    # Find all comparison operators in this line
+    matches = list(COMPARISON_PATTERN.finditer(target_line))
+    
+    if not matches:
+        # No comparison operators found, can't mutate
+        return None
+    
+    # Pick a random operator to swap
+    match = random.choice(matches)
+    original_op = match.group()
+    # Pick a random replacement from the possible mutations for this operator
+    replacement_op = random.choice(COMPARISON_MUTATIONS[original_op])
+    
+    # Build the new line with the swapped operator
+    # We replace only the first occurrence at the matched position
+    new_line = (
+        target_line[:match.start()] + 
+        replacement_op + 
+        target_line[match.end():]
+    )
+    
+    new_lines[target_idx] = new_line
+    
+    return new_lines
+
+
+# === BOOLEAN MUTATION ===
+
+# Mapping of boolean operators to their opposites
+BOOLEAN_SWAPS = {
+    ' and ': ' or ',
+    ' or ': ' and ',
+}
+
+# Pattern to find boolean operators (with spaces to avoid matching 'android' etc.)
+BOOLEAN_PATTERN = re.compile(r'( and | or )')
+
+
+def mutate_boolean(lines, target_idx):
+    """
+    Operator: BOOLEAN MUTATION
+    
+    Finds boolean operators (and/or) in the target line and swaps them.
+    
+    This fixes common logic bugs where:
+    - 'and' should be 'or' (too restrictive condition)
+    - 'or' should be 'and' (too permissive condition)
+    
+    Example:
+        Input:  "if has_length or has_digit:"
+        Output: "if has_length and has_digit:"
+    """
+    new_lines = lines[:]
+    target_line = new_lines[target_idx]
+    
+    # Find all boolean operators in this line
+    matches = list(BOOLEAN_PATTERN.finditer(target_line))
+    
+    if not matches:
+        return None
+    
+    # Pick a random operator to swap
+    match = random.choice(matches)
+    original_op = match.group()
+    replacement_op = BOOLEAN_SWAPS[original_op]
+    
+    # Build the new line
+    new_line = (
+        target_line[:match.start()] + 
+        replacement_op + 
+        target_line[match.end():]
+    )
+    
+    new_lines[target_idx] = new_line
+    
+    return new_lines
+
+
 # === SELECTION LOGIC ===
 
 def select_line_by_weight(weighted_lines):
@@ -134,9 +254,13 @@ def apply_random_mutation(lines, weighted_lines_info):
     # For simplicity, we assume any line in 'candidates' is a valid code bank
     source_idx = random.choice(candidates)[0]
     
-    op = random.choice(['delete', 'insert', 'swap'])
+    # Mutation operators with weights:
+    # - expression (2x): comparison bugs are very common
+    # - boolean (2x): and/or bugs are common
+    # - delete, insert, swap: standard GenProg operators
+    op = random.choice(['delete', 'insert', 'swap', 'expression', 'expression', 'boolean', 'boolean'])
     
-    mutated_lines = []
+    mutated_lines = None
     
     if op == 'delete':
         print(f"Applying DELETE at line {target_idx+1}")
@@ -147,6 +271,27 @@ def apply_random_mutation(lines, weighted_lines_info):
     elif op == 'swap':
         print(f"Applying SWAP: Swapping line {target_idx+1} with line {source_idx+1}")
         mutated_lines = mutate_swap(lines, target_idx, source_idx)
+    elif op == 'expression':
+        result = mutate_expression(lines, target_idx)
+        if result:
+            # Get the original and new line for display
+            orig_line = lines[target_idx].strip()
+            new_line = result[target_idx].strip()
+            print(f"Applying EXPRESSION at line {target_idx+1}: '{orig_line}' -> '{new_line}'")
+            mutated_lines = result
+        else:
+            print(f"EXPRESSION at line {target_idx+1}: No comparison operators found, skipping.")
+            return None
+    elif op == 'boolean':
+        result = mutate_boolean(lines, target_idx)
+        if result:
+            orig_line = lines[target_idx].strip()
+            new_line = result[target_idx].strip()
+            print(f"Applying BOOLEAN at line {target_idx+1}: '{orig_line}' -> '{new_line}'")
+            mutated_lines = result
+        else:
+            print(f"BOOLEAN at line {target_idx+1}: No boolean operators found, skipping.")
+            return None
         
     # Syntax Check
     if is_valid_syntax(mutated_lines):

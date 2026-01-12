@@ -1,0 +1,74 @@
+======================================================================
+         AUTOMATED PROGRAM REPAIR - SUMMARY REPORT
+======================================================================
+
+Timestamp: 2026-01-12 23:12:34
+Benchmark: benchmark2
+Function Tested: calculate_average()
+
+----------------------------------------------------------------------
+RESULT
+----------------------------------------------------------------------
+Status: SUCCESS - Perfect repair found!
+Final Fitness: 33.0/33.0
+Generations Run: 10
+Solution Found At: Generation 1
+
+----------------------------------------------------------------------
+FAULT LOCALIZATION
+----------------------------------------------------------------------
+Suspicious lines identified (higher weight = more suspicious):
+  Line 7: weight = 0.1
+  Line 10: weight = 0.1
+  Line 11: weight = 0.1
+  Line 12: weight = 0.1
+  Line 14: weight = 0.1
+
+----------------------------------------------------------------------
+CODE CHANGES
+----------------------------------------------------------------------
+Total lines changed: 1
+
+Line 7:
+  BEFORE: if len(numbers) < 0:  # BUG: should be == 0 or use 'not numbers'
+  AFTER:  if len(numbers) <= 0:  # BUG: should be == 0 or use 'not numbers'
+
+----------------------------------------------------------------------
+ORIGINAL CODE (patient.py)
+----------------------------------------------------------------------
+  1: def calculate_average(numbers):
+  2:     """
+  3:     Calculates the average of a list of numbers.
+  4:     BUG: Uses < instead of == when checking for empty list.
+  5:     This causes non-empty lists to incorrectly return 0.
+  6:     """
+  7:     if len(numbers) < 0:  # BUG: should be == 0 or use 'not numbers'
+  8:         return 0.0
+  9: 
+ 10:     total = 0
+ 11:     for n in numbers:
+ 12:         total += n
+ 13: 
+ 14:     return total / len(numbers)
+
+----------------------------------------------------------------------
+REPAIRED CODE (repaired_solution.py)
+----------------------------------------------------------------------
+  1: def calculate_average(numbers):
+  2:     """
+  3:     Calculates the average of a list of numbers.
+  4:     BUG: Uses < instead of == when checking for empty list.
+  5:     This causes non-empty lists to incorrectly return 0.
+  6:     """
+  7:     if len(numbers) <= 0:  # BUG: should be == 0 or use 'not numbers'
+  8:         return 0.0
+  9: 
+ 10:     total = 0
+ 11:     for n in numbers:
+ 12:         total += n
+ 13: 
+ 14:     return total / len(numbers)
+
+======================================================================
+END OF REPORT
+======================================================================

@@ -1,0 +1,77 @@
+======================================================================
+         AUTOMATED PROGRAM REPAIR - SUMMARY REPORT
+======================================================================
+
+Timestamp: 2026-01-12 23:05:40
+Benchmark: benchmark5
+Function Tested: count_positives()
+
+----------------------------------------------------------------------
+RESULT
+----------------------------------------------------------------------
+Status: SUCCESS - Perfect repair found!
+Final Fitness: 33.0/33.0
+Generations Run: 15
+Solution Found At: Generation 1
+
+----------------------------------------------------------------------
+FAULT LOCALIZATION
+----------------------------------------------------------------------
+Suspicious lines identified (higher weight = more suspicious):
+  Line 7: weight = 0.1
+  Line 10: weight = 0.1
+  Line 11: weight = 0.1
+  Line 12: weight = 0.1
+  Line 13: weight = 0.1
+  Line 15: weight = 0.1
+
+----------------------------------------------------------------------
+CODE CHANGES
+----------------------------------------------------------------------
+Total lines changed: 1
+
+Line 12:
+  BEFORE: if n < 0:  # BUG: should be > 0 to count positives
+  AFTER:  if n > 0:  # BUG: should be > 0 to count positives
+
+----------------------------------------------------------------------
+ORIGINAL CODE (patient.py)
+----------------------------------------------------------------------
+  1: def count_positives(numbers):
+  2:     """
+  3:     Counts how many positive numbers are in the list.
+  4:     BUG: Uses '<' instead of '>' to check for positive, counting
+  5:     negative numbers instead of positive ones.
+  6:     """
+  7:     if not numbers:
+  8:         return 0
+  9: 
+ 10:     count = 0
+ 11:     for n in numbers:
+ 12:         if n < 0:  # BUG: should be > 0 to count positives
+ 13:             count += 1
+ 14: 
+ 15:     return count
+
+----------------------------------------------------------------------
+REPAIRED CODE (repaired_solution.py)
+----------------------------------------------------------------------
+  1: def count_positives(numbers):
+  2:     """
+  3:     Counts how many positive numbers are in the list.
+  4:     BUG: Uses '<' instead of '>' to check for positive, counting
+  5:     negative numbers instead of positive ones.
+  6:     """
+  7:     if not numbers:
+  8:         return 0
+  9: 
+ 10:     count = 0
+ 11:     for n in numbers:
+ 12:         if n > 0:  # BUG: should be > 0 to count positives
+ 13:             count += 1
+ 14: 
+ 15:     return count
+
+======================================================================
+END OF REPORT
+======================================================================

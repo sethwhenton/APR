@@ -1,0 +1,66 @@
+======================================================================
+         AUTOMATED PROGRAM REPAIR - SUMMARY REPORT
+======================================================================
+
+Timestamp: 2026-01-12 23:12:55
+Benchmark: benchmark4
+Function Tested: is_valid_password()
+
+----------------------------------------------------------------------
+RESULT
+----------------------------------------------------------------------
+Status: SUCCESS - Perfect repair found!
+Final Fitness: 33.0/33.0
+Generations Run: 10
+Solution Found At: Generation 1
+
+----------------------------------------------------------------------
+FAULT LOCALIZATION
+----------------------------------------------------------------------
+Suspicious lines identified (higher weight = more suspicious):
+  Line 7: weight = 0.1
+  Line 8: weight = 0.1
+  Line 11: weight = 0.1
+
+----------------------------------------------------------------------
+CODE CHANGES
+----------------------------------------------------------------------
+Total lines changed: 1
+
+Line 11:
+  BEFORE: return has_length or has_digit
+  AFTER:  return has_length and has_digit
+
+----------------------------------------------------------------------
+ORIGINAL CODE (patient.py)
+----------------------------------------------------------------------
+  1: def is_valid_password(password):
+  2:     """
+  3:     Checks if a password is valid.
+  4:     Requirements: At least 8 characters AND contains a digit.
+  5:     BUG: Uses 'or' instead of 'and' - accepts passwords meeting only ONE requirement.
+  6:     """
+  7:     has_length = len(password) >= 8
+  8:     has_digit = any(c.isdigit() for c in password)
+  9: 
+ 10:     # BUG: should be 'and' not 'or'
+ 11:     return has_length or has_digit
+
+----------------------------------------------------------------------
+REPAIRED CODE (repaired_solution.py)
+----------------------------------------------------------------------
+  1: def is_valid_password(password):
+  2:     """
+  3:     Checks if a password is valid.
+  4:     Requirements: At least 8 characters AND contains a digit.
+  5:     BUG: Uses 'or' instead of 'and' - accepts passwords meeting only ONE requirement.
+  6:     """
+  7:     has_length = len(password) >= 8
+  8:     has_digit = any(c.isdigit() for c in password)
+  9: 
+ 10:     # BUG: should be 'and' not 'or'
+ 11:     return has_length and has_digit
+
+======================================================================
+END OF REPORT
+======================================================================

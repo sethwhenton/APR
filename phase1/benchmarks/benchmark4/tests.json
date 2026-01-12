@@ -1,0 +1,50 @@
+{
+    "function_name": "is_valid_password",
+    "max_fitness": 33.0,
+    "positive_tests": {
+        "weight": 1.0,
+        "cases": [
+            {
+                "input": [
+                    "password123"
+                ],
+                "expected": true
+            },
+            {
+                "input": [
+                    "securepass1"
+                ],
+                "expected": true
+            },
+            {
+                "input": [
+                    "12345678a"
+                ],
+                "expected": true
+            }
+        ]
+    },
+    "negative_tests": {
+        "weight": 10.0,
+        "cases": [
+            {
+                "input": [
+                    "short1"
+                ],
+                "expected": false
+            },
+            {
+                "input": [
+                    "1"
+                ],
+                "expected": false
+            },
+            {
+                "input": [
+                    "nodigits"
+                ],
+                "expected": false
+            }
+        ]
+    }
+}
